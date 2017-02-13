@@ -1,0 +1,7 @@
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc.js
+.jsbeautifyrc
+.npmignore
+webpack.config.babel.js

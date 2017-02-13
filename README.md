@@ -1,4 +1,5 @@
-## 文件夹对比
+## folder comparison
+  文件夹对比，生成可还原的增量包
 
 ## Api
   comparison(original, freshly, zipPath) // 生成增量包

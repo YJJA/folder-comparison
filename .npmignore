@@ -4,4 +4,6 @@
 .eslintrc.js
 .jsbeautifyrc
 .npmignore
+test/
+src/
 webpack.config.babel.js

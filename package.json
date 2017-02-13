@@ -1,6 +1,6 @@
 {
   "name": "folder-comparison",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "folder comparison",
   "main": "dist/folder-comparison.js",
   "scripts": {

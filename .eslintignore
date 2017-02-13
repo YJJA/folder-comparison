@@ -1,0 +1,5 @@
+server/
+node_modules/
+src/controller/server-bundle.js
+src/plugins
+dist/

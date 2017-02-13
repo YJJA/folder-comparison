@@ -1,0 +1,7 @@
+node_modules/
+server/
+.temp/
+.DS_Store
+/src/controller/server-bundle.js
+/patch
+/bundle

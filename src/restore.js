@@ -2,7 +2,7 @@ import path from 'path'
 import unzip from 'unzip2'
 import fse from 'fs-extra'
 import fs from 'fs'
-import type from './type'
+import types from './types'
 import text from './text'
 
 // restore
@@ -26,12 +26,12 @@ export async function restoreFromZip(original, zipFile, dist) {
     const target = path.join(dist, name)
     const originalpath = path.join(original, name)
 
-    if (action === type.INSERT) {
+    if (action === types.INSERT) {
       await fse.copy(filepath, target)
       return update
     }
 
-    if (action === type.UPDATE) {
+    if (action === types.UPDATE) {
       let patchText = await fse.readFile(filepath, 'utf8')
       let originalText = await fse.readFile(originalpath, 'utf8')
       let freshlyText = text.apply(originalText, patchText)
@@ -42,7 +42,7 @@ export async function restoreFromZip(original, zipFile, dist) {
       return update
     }
 
-    if (action === type.DELETE) {
+    if (action === types.DELETE) {
       return update
     }
 

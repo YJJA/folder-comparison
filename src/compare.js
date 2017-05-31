@@ -3,8 +3,9 @@ import fs from 'fs'
 import path from 'path'
 import md5 from 'md5'
 import archiver from 'archiver'
+import isBinaryPath from 'is-binary-path'
 
-import type from './type'
+import types from './types'
 import text from './text'
 
 // createActions
@@ -14,15 +15,13 @@ export async function createActions(original, freshly) {
     through(freshly)
   ])
 
-  const fileExt = ['.jsbundle', '.js', '.css']
-
   const diffPromise = freshlyFiles.map(async freshlyFile => {
     const originalFile = originalFiles.find(item => {
       return item.name === freshlyFile.name
     })
 
     if (!originalFile) {
-      return {...freshlyFile, action: type.INSERT}
+      return {...freshlyFile, action: types.INSERT}
     }
 
     originalFile.isFound = true
@@ -33,29 +32,29 @@ export async function createActions(original, freshly) {
     ])
 
     if (md5(freshlyFileText) !== md5(originalFileText)) {
-      if (fileExt.includes(path.extname(freshlyFile.name))) {
+      if (!isBinaryPath(freshlyFile.name)) {
         const patchText = text.patch(originalFileText, freshlyFileText)
         return {
-          action: type.UPDATE,
+          action: types.UPDATE,
           name: freshlyFile.name,
           patch: patchText
         }
       } else {
         return {
-          action: type.INSERT,
+          action: types.INSERT,
           name: freshlyFile.name,
           path: freshlyFile.path
         }
       }
     } else {
-      return {action: type.NORMAL, name: freshlyFile.name}
+      return {action: types.NORMAL, name: freshlyFile.name}
     }
   })
 
   const actions = await Promise.all(diffPromise)
   originalFiles.forEach(oFile => {
     if (!oFile.isFound) {
-      actions.push({action: type.DELETE, name: oFile.name})
+      actions.push({action: types.DELETE, name: oFile.name})
     }
   })
 
@@ -106,10 +105,10 @@ function actionsToZip(actions, dist) {
 
     let updateJson = actions.map(update => {
       const {action, name, patch, path} = update
-      if (action === type.INSERT) {
+      if (action === types.INSERT) {
         archive.file(path, { name })
       }
-      if (action === type.UPDATE) {
+      if (action === types.UPDATE) {
         archive.append(patch, { name })
       }
       return {action, name}
